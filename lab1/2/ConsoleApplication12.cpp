@@ -4,6 +4,12 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include <fstream>
+
+bool CheckingArgs(int argc)
+{
+	return (argc == 4);
+}
 
 int CharToInt(char letter)
 {
@@ -18,7 +24,7 @@ char IntToChar(int mod)
 	return symbols[mod];
 }
 
-std::string Reverse(std::string str) 
+std::string Reverse(std::string str)
 {
 	char ch;
 	for (int i = 0; i < (str.length() / 2); i++)
@@ -37,7 +43,7 @@ std::string IntToStr(int n, int radix, bool& wasError)
 	std::string result = "";
 	char ch;
 
-	while (n != 0) 
+	while (n != 0)
 	{
 		mod = n % radix;
 		ch = IntToChar(mod);
@@ -50,17 +56,6 @@ std::string IntToStr(int n, int radix, bool& wasError)
 
 	result = Reverse(result);
 	return result;
-}
-
-
-void CheckInput(bool& wasError, int startBase, int endBase, std::string number)
-{
-	if (startBase > 36 || startBase < 2) 
-		wasError = true;
-	if (endBase > 36 || endBase < 2)
-		wasError = true;
-	if (number == "")
-		wasError = true;
 }
 
 int StrToInt(const std::string& str, int radix, bool& wasError)
@@ -92,44 +87,84 @@ int StrToInt(const std::string& str, int radix, bool& wasError)
 	return result;
 }
 
-int main()
+bool IsValidRadix(const std::string& radix)
+{
+	if (radix.length() == 0)
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i < radix.length(); ++i)
+	{
+		if (radix[i] > '9' || radix[i] < '0')
+		{
+			return false;
+		}
+	}
+
+	if (stoi(radix) < 2 || stoi(radix) > 36)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+int main(int argc, char* argv[])
 {
 	std::cout << "Start\n";
-	int startSystem = 0;
-	int endSystem = 0;
-	std::string number = "";
-	std::cin >> startSystem >> endSystem >> number;
+
+	std::ofstream output("output.txt");
+
+	if (!CheckingArgs(argc))
+	{
+		std::cout << "invalid count of input parameters\n"
+			<< "Expected model: replace.exe <input_file> <output_file> <search string> <replace string>\n";
+		return 0;
+	}
+
 	bool wasError = false;
-	//Проверяем системы счисления
-	CheckInput(wasError, startSystem, endSystem, number);
-	if (wasError) 
+
+	if (!IsValidRadix(argv[1]) || !IsValidRadix(argv[2]))
 	{
 		std::cout << "Wrong input\n";
+		return 0;
+	}
+
+	int startSystem = std::stoi(argv[1]);
+	int endSystem = std::stoi(argv[2]);
+	
+	std::string number = argv[3];
+
+	//Проверяем системы счисления
+
+	//Get absolute value of number
+	bool underZero = number[0] == '-';
+	if (underZero)
+	{
+		number = number.substr(1, number.length() - 1);
+	}
+
+	int interim = StrToInt(number, startSystem, wasError);
+
+	if (wasError)
+	{
+		return 0;
+	}
+
+	std::string resultString = IntToStr(interim, endSystem, wasError);
+
+	if (underZero) {
+		std::cout << '-' << resultString << "\n";
 	}
 	else
 	{
-		//Get absolute value of number
-		bool underZero = number[0] == '-';
-		if (underZero) 
-		{
-			number = number.substr(1, number.length() - 1);
-		}
-
-		int interim = StrToInt(number, startSystem, wasError);
-
-		if (!wasError)
-		{
-			std::string resultString = IntToStr(interim, endSystem, wasError);
-
-			if (underZero) {
-				std::cout << '-' << resultString << "\n";
-			}
-			else
-			{
-				std::cout << resultString << "\n";
-			}
-		}
+		std::cout << resultString << "\n";
 	}
+
+	output << resultString << "\n";
+
+	return 0;
 }
 
 

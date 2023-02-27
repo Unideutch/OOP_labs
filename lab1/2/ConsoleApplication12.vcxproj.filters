@@ -19,4 +19,32 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test.bat">
+      <Filter>Исходные файлы</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="maxInt.txt">
+      <Filter>Исходные файлы</Filter>
+    </Text>
+    <Text Include="bigToSmall.txt">
+      <Filter>Исходные файлы</Filter>
+    </Text>
+    <Text Include="smallToBig.txt">
+      <Filter>Исходные файлы</Filter>
+    </Text>
+    <Text Include="wrongInput.txt">
+      <Filter>Исходные файлы</Filter>
+    </Text>
+    <Text Include="maxIntBelow.txt">
+      <Filter>Исходные файлы</Filter>
+    </Text>
+    <Text Include="inflation.txt">
+      <Filter>Исходные файлы</Filter>
+    </Text>
+    <Text Include="output.txt">
+      <Filter>Исходные файлы</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
